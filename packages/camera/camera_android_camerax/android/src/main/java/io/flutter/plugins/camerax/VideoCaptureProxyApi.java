@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
 import androidx.camera.camera2.interop.Camera2Interop;
 import androidx.camera.camera2.interop.ExperimentalCamera2Interop;
+import androidx.camera.core.MirrorMode;
 import androidx.camera.video.VideoCapture;
 import androidx.camera.video.VideoOutput;
 
@@ -31,7 +32,9 @@ class VideoCaptureProxyApi extends PigeonApiVideoCapture {
   @Override
   public VideoCapture<?> withOutput(
       @NonNull VideoOutput videoOutput, @Nullable Range<?> targetFpsRange) {
-    VideoCapture.Builder<VideoOutput> builder = new VideoCapture.Builder<>(videoOutput);
+    // Mirror front camera recordings so they match the preview and the iOS implementation.
+    VideoCapture.Builder<VideoOutput> builder =
+        new VideoCapture.Builder<>(videoOutput).setMirrorMode(MirrorMode.MIRROR_MODE_ON_FRONT_ONLY);
 
     if (targetFpsRange != null) {
       Camera2Interop.Extender<VideoCapture<VideoOutput>> extender =

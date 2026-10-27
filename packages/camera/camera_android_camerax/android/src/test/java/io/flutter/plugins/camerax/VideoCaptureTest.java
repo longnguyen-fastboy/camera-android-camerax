@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import android.hardware.camera2.CaptureRequest;
 import android.util.Range;
 import androidx.camera.camera2.interop.Camera2Interop;
+import androidx.camera.core.MirrorMode;
 import androidx.camera.video.VideoCapture;
 import androidx.camera.video.VideoOutput;
 import org.junit.Test;
@@ -46,6 +47,15 @@ public class VideoCaptureTest {
       assertEquals(1, mockCamera2InteropExtender.constructed().size());
       assertEquals(videoOutput, videoCapture.getOutput());
     }
+  }
+
+  @Test
+  public void withOutput_mirrorsFrontCameraRecordings() {
+    final PigeonApiVideoCapture api = new TestProxyApiRegistrar().getPigeonApiVideoCapture();
+
+    final VideoCapture<?> videoCapture = api.withOutput(mock(VideoOutput.class), null);
+
+    assertEquals(MirrorMode.MIRROR_MODE_ON_FRONT_ONLY, videoCapture.getMirrorMode());
   }
 
   @SuppressWarnings("unchecked")
